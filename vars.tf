@@ -17,3 +17,15 @@ variable "keyring_name" {
 variable "keyring_location" {
   description = "KeyRing Name."
 }
+
+variable "vault_cluster_machine_type" {
+  description = "Vault Cluster Machine Type."
+}
+
+variable "gcloud-zone" {
+  description = "Zone."
+}
+
+variable "vault-url" {
+  description = "current vault url"
+}
