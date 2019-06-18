@@ -22,10 +22,10 @@ variable "vault_cluster_machine_type" {
   description = "Vault Cluster Machine Type."
 }
 
-variable "gcloud-zone" {
+variable "gcloud_zone" {
   description = "Zone."
 }
 
-variable "vault-url" {
+variable "vault_url" {
   description = "current vault url"
 }
