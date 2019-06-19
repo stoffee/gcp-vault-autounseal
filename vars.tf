@@ -29,3 +29,4 @@ variable "gcloud_zone" {
 variable "vault_url" {
   description = "current vault url"
 }
+
