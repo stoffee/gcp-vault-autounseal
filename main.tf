@@ -36,7 +36,7 @@ resource "google_compute_instance" "vault" {
 
   # Service account with Cloud KMS roles for the Compute Instance
   service_account {
-    email  = google_service_account.vault_kms_service_account.email
+    email  = "google_service_account.vault_kms_service_account.email"
     scopes = ["cloud-platform", "compute-rw", "userinfo-email", "storage-ro"]
   }
 
