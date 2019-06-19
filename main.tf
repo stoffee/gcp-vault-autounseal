@@ -67,18 +67,18 @@ SCRIPT
 }
 
 output "project" {
-  value = google_compute_instance.vault.project
+  value = "google_compute_instance.vault.project"
 }
 
 output "vault_server_instance_id" {
-  value = google_compute_instance.vault.self_link
+  value = "google_compute_instance.vault.self_link"
 }
 
  #Create a KMS key ring
  resource "google_kms_key_ring" "key_ring" {
-   project  = var.gcp_project_id
-   name     = var.keyring_name
-   location = var.keyring_location
+   project  = "${var.gcp_project_id}"
+   name     = "${var.keyring_name}"
+   location = "${var.keyring_location}"
  }
 
 # Create a crypto key for the key ring
@@ -91,7 +91,7 @@ output "vault_server_instance_id" {
 # Add the service account to the Keyring
 resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
   # key_ring_id = "${google_kms_key_ring.key_ring.id}"
-  key_ring_id = var.gcp_project_id/var.keyring_location/var.keyring_name
+  key_ring_id = "${var.gcp_project_id}"/"${var.keyring_location}"/"${var.keyring_name}"
   role = "roles/owner"
 
   members = [
