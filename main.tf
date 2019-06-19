@@ -1,7 +1,7 @@
 provider "google" {
   region      = "${var.gcp_region}"
-  credentials = "var.gcp_credentials"
-  project     = var.gcp_project_id
+  credentials = "${var.gcp_credentials}"
+  project     = "${var.gcp_project_id}"
 }
 
 resource "google_service_account" "vault_kms_service_account" {
@@ -12,7 +12,7 @@ resource "google_service_account" "vault_kms_service_account" {
 resource "google_compute_instance" "vault" {
   name         = "cd-vault"
   machine_type     = var.vault_cluster_machine_type
-  zone         = var.gcloud_zone
+  zone         = "${var.gcloud_zone}
 
   boot_disk {
     initialize_params {
