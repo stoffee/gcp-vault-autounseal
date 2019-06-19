@@ -91,7 +91,7 @@ output "vault_server_instance_id" {
 # Add the service account to the Keyring
 resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
   # key_ring_id = "${google_kms_key_ring.key_ring.id}"
-  key_ring_id = "${var.gcp_project_id}"/"${var.keyring_location}"/"${var.keyring_name}"
+  key_ring_id = "${var.gcp_project_id}/${var.keyring_location}/${var.keyring_name}"
   role = "roles/owner"
 
   members = [
