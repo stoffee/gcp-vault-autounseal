@@ -4,10 +4,10 @@ provider "google" {
   project     = var.gcp_project_id
 }
 
-resource "google_service_account" "vault_kms_service_account" {
-  account_id   = "cd-vault-gcpkms"
-  display_name = "Vault KMS for auto-unseal"
-}
+#resource "google_service_account" "vault_kms_service_account" {
+#  account_id   = "cd-vault-gcpkms"
+#  display_name = "Vault KMS for auto-unseal"
+#}
 
 resource "google_compute_instance" "vault" {
   name         = "cd-vault"
@@ -36,7 +36,7 @@ resource "google_compute_instance" "vault" {
 
   # Service account with Cloud KMS roles for the Compute Instance
   service_account {
-    email  = "google_service_account.vault_kms_service_account.email"
+    email  = "cd-tf-svc-acct@chris-dunlap-hgcp.iam.gserviceaccount.com"
     scopes = ["cloud-platform", "compute-rw", "userinfo-email", "storage-ro"]
   }
 
