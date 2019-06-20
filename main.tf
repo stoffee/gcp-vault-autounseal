@@ -4,10 +4,10 @@ provider "google" {
   project     = "${var.gcp_project_id}"
 }
 
-#resource "google_service_account" "vault_kms_service_account" {
-#  account_id   = "cd-vault-gcpkms"
-#  display_name = "Vault KMS for auto-unseal"
-#}
+resource "google_service_account" "vault_kms_service_account" {
+  account_id   = "cd-vault-gcpkms"
+  display_name = "Vault KMS for auto-unseal"
+}
 
 resource "google_compute_instance" "vault" {
   name         = "cd-vault"
@@ -36,7 +36,7 @@ resource "google_compute_instance" "vault" {
 
   # Service account with Cloud KMS roles for the Compute Instance
   service_account {
-    email  = "cd-tf-svc-acct@chris-dunlap-hgcp.iam.gserviceaccount.com"
+    email  = google_service_account.vault_kms_service_account.email
     scopes = ["cloud-platform", "compute-rw", "userinfo-email", "storage-ro"]
   }
 
@@ -82,11 +82,11 @@ output "vault_server_instance_id" {
  }
 
 # Create a crypto key for the key ring
-# resource "google_kms_crypto_key" "crypto_key" {
-#   name            = "${var.crypto_key}"
-#   key_ring        = "${google_kms_key_ring.key_ring.self_link}"
-#   rotation_period = "100000s"
-# }
+ resource "google_kms_crypto_key" "crypto_key" {
+   name            = "${var.crypto_key}"
+   key_ring        = "${google_kms_key_ring.key_ring.self_link}"
+   rotation_period = "100000s"
+ }
 
 # Add the service account to the Keyring
 resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
@@ -95,6 +95,6 @@ resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
   role = "roles/owner"
 
   members = [
-    "serviceAccount:cd-tf-svc-acct@chris-dunlap-hgcp.iam.gserviceaccount.com",
+    "serviceAccount:${google_service_account.vault_kms_service_account.email}",
   ]
 }
