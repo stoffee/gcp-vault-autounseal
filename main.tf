@@ -9,24 +9,6 @@ resource "google_service_account" "vault_kms_service_account" {
   display_name = "Vault KMS for auto-unseal"
 }
 
-resource "google_compute_firewall" "http_api" {
-  project = "${var.gcp_project_id}"
-
-  name    = "${var.network}-rule-external-api-access-is"
-  network = "bob"
-
-  allow {
-    protocol = "tcp"
-
-    ports = [
-      "8200",
-    ]
-  }
-
-  target_tags   = ["${var.network}-http-api"]
-  source_ranges = ["0.0.0.0/0"]
-}
-
 resource "google_compute_instance" "vault" {
   name         = "cd-vault"
   machine_type     = "${var.vault_cluster_machine_type}"
@@ -47,8 +29,8 @@ tags = [
 #  }
 
   network_interface {
-   # network = "default"
-    network = "${var.network}"
+    network = "default"
+#    network = "${var.network}"
 
     access_config {
       # Ephemeral IP
