@@ -33,3 +33,7 @@ variable "vault_url" {
 variable "crypto_key" {
   description = "crypto_key"
 }
+
+variable "network" {
+  description = "network"
+}
