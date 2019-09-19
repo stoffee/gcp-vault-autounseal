@@ -48,8 +48,8 @@ resource "google_compute_instance" "vault" {
     sudo install -c -m 0755 vault /usr/bin
 
     sudo mkdir -p /opt/vault/storage
-    touch /opt/vault/vault.unseal.info
-    chmod 777 /opt/vault/vault.unseal.info
+    touch /opt/vault/vault.unseal.info /opt/vault/setup.log
+    chmod 777 /opt/vault/vault.unseal.info /opt/vault/setup.log
 
     sudo echo -e '[Unit]\nDescription="HashiCorp Vault - A tool for managing secrets"\nDocumentation=https://www.vaultproject.io/docs/\nRequires=network-online.target\nAfter=network-online.target\n\n[Service]\nExecStart=/usr/bin/vault server -config=/opt/vault/config.hcl\nExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nKillSignal=SIGINT\nRestart=on-failure\nRestartSec=5\n\n[Install]\nWantedBy=multi-user.target\n' > /lib/systemd/system/vault.service
 
@@ -63,10 +63,17 @@ resource "google_compute_instance" "vault" {
 
     sudo systemctl enable vault
     sudo systemctl start vault
-    sleep 10
-    /usr/bin/vault status >> /opt/vault/vault.unseal.info
+    
     /usr/bin/vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/vault.unseal.info
 
+    ROOT_TOKEN=`cat /opt/vault/vault.unseal.info |grep Root|awk '{print $4}'`
+    /usr/bin/vault login $ROOT_TOKEN >> /opt/vault/setup.log
+    /usr/bin/vault secrets enable transit >> /opt/vault/setup.log
+    /usr/bin/vault secrets enable -path=encryption transit >> /opt/vault/setup.log
+    /usr/bin/vault vault write -f transit/keys/orders >> /opt/vault/setup.log
+    /usr/bin/vault auth enable gcp >>/opt/vault/setup.log
+    /usr/bin/vault write auth/gcp/role/my-iam-role type="iam"  policies="dev,prod"  bound_service_accounts="cd-tf-svc-acct@chris-dunlap-hgcp.iam.gserviceaccount.com" >>/opt/vault/setup.log
+    /usr/bin/vault write auth/gcp/role/my-gce-role type="gce"  policies="dev,prod" bound_projects="chris-dunlap-hgcp" >>/opt/vault/setup.log
 
 SCRIPT
 
