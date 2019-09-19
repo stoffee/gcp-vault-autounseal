@@ -12,6 +12,6 @@ resource "google_compute_firewall" "http_api" {
     ]
   }
 
-  target_tags   = ["default-vaul"]
+  target_tags   = ["default-vault"]
   source_ranges = ["0.0.0.0/0"]
 }
