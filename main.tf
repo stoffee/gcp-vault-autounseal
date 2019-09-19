@@ -63,8 +63,8 @@ resource "google_compute_instance" "vault" {
 
     sudo systemctl enable vault
     sudo systemctl start vault
-
-    vault operator init -recovery-shares=1 -recovery-threshold=1 > /opt/vault/vault.unseal.info
+    vault status >> /opt/vault/vault.unseal.info
+    vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/vault.unseal.info
 
 
 SCRIPT
