@@ -2,7 +2,7 @@ resource "google_compute_firewall" "http_api" {
   project = "${var.gcp_project_id}"
 
   name    = "default-rule-external-api-access-is"
-  network = "bob"
+  network = "default"
 
   allow {
     protocol = "tcp"
