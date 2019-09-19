@@ -15,7 +15,7 @@ resource "google_compute_instance" "vault" {
   zone         = "${var.gcloud_zone}"
 
 tags = [
-    "default-http-api",
+    "default-vault",
   ]
 
   boot_disk {

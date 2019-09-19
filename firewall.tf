@@ -1,7 +1,7 @@
 resource "google_compute_firewall" "http_api" {
   project = "${var.gcp_project_id}"
 
-  name    = "default-rule-external-api-access-is"
+  name    = "default-allow-vault"
   network = "default"
 
   allow {
@@ -12,6 +12,6 @@ resource "google_compute_firewall" "http_api" {
     ]
   }
 
-  target_tags   = ["default-http-api"]
+  target_tags   = ["default-vaul"]
   source_ranges = ["0.0.0.0/0"]
 }
