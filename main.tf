@@ -64,6 +64,8 @@ resource "google_compute_instance" "vault" {
     sudo systemctl enable vault
     sudo systemctl start vault
     
+    sleep 10
+
     /usr/bin/vault operator init -recovery-shares=1 -recovery-threshold=1 >> /opt/vault/vault.unseal.info
 
     ROOT_TOKEN=`cat /opt/vault/vault.unseal.info |grep Root|awk '{print $4}'`
