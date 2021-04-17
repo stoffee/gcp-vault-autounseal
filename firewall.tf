@@ -1,5 +1,5 @@
 resource "google_compute_firewall" "http_api" {
-  project = "${var.gcp_project_id}"
+  project = var.gcp_project_id
 
   name    = "default-allow-vault"
   network = "default"

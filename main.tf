@@ -1,7 +1,7 @@
 provider "google" {
-  region      = "${var.gcp_region}"
-  credentials = "${var.gcp_credentials}"
-  project     = "${var.gcp_project_id}"
+  region      = var.gcp_region
+  credentials = var.gcp_credentials
+  project     = var.gcp_project_id
 }
 
 resource "google_service_account" "vault_kms_service_account" {
@@ -11,8 +11,8 @@ resource "google_service_account" "vault_kms_service_account" {
 
 resource "google_compute_instance" "vault" {
   name         = "cd-vault"
-  machine_type     = "${var.vault_cluster_machine_type}"
-  zone         = "${var.gcloud_zone}"
+  machine_type     = var.vault_cluster_machine_type
+  zone         = var.gcloud_zone
 
 tags = [
     "default-vault",
@@ -87,30 +87,30 @@ SCRIPT
 }
 
 output "project" {
-  value = "${google_compute_instance.vault.project}"
+  value = google_compute_instance.vault.project
 }
 
 output "vault_server_instance_id" {
-  value = "${google_compute_instance.vault.self_link}"
+  value = google_compute_instance.vault.self_link
 }
 
  #Create a KMS key ring
  resource "google_kms_key_ring" "key_ring" {
-   project  = "${var.gcp_project_id}"
-   name     = "${var.keyring_name}"
-   location = "${var.keyring_location}"
+   project  = var.gcp_project_id
+   name     = var.keyring_name
+   location = var.keyring_location
  }
 
 # Create a crypto key for the key ring
  resource "google_kms_crypto_key" "crypto_key" {
-   name            = "${var.crypto_key}"
-   key_ring        = "${google_kms_key_ring.key_ring.self_link}"
+   name            = var.crypto_key
+   key_ring        = google_kms_key_ring.key_ring.self_link
    rotation_period = "100000s"
  }
 
 # Add the service account to the Keyring
 resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
-   key_ring_id = "${google_kms_key_ring.key_ring.id}"
+   key_ring_id = google_kms_key_ring.key_ring.id
 #  key_ring_id = "${var.gcp_project_id}/${var.keyring_location}/${var.keyring_name}"
   role = "roles/owner"
 
